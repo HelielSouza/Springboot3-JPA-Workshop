@@ -7,9 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.springbackend.webservice.entities.Order;
-import com.springbackend.webservice.entities.User;
 import com.springbackend.webservice.repositories.OrderRepository;
-import com.springbackend.webservice.repositories.UserRepository;
 
 @Service
 public class OrderService {
