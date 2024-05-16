@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Profile;
 import com.springbackend.webservice.entities.Category;
 import com.springbackend.webservice.entities.Order;
 import com.springbackend.webservice.entities.OrderItem;
+import com.springbackend.webservice.entities.Payment;
 import com.springbackend.webservice.entities.Product;
 import com.springbackend.webservice.entities.User;
 import com.springbackend.webservice.entities.enums.OrderStatus;
@@ -45,8 +46,7 @@ public class TestConfig implements CommandLineRunner {
 		Category cat1 = new Category(null, "Electronics"); 
 		Category cat2 = new Category(null, "Books"); 
 		Category cat3 = new Category(null, "Computers"); 
-		
-		Product p1 = new Product(null, "The Lord of the Rings", "Lorem ipsum dolor sit amet, consectetur.", 90.5, ""); 
+ 		Product p1 = new Product(null, "The Lord of the Rings", "Lorem ipsum dolor sit amet, consectetur.", 90.5, ""); 
 		Product p2 = new Product(null, "Smart TV", "Nulla eu imperdiet purus. Maecenas ante.", 2190.0, ""); 
 		Product p3 = new Product(null, "Macbook Pro", "Nam eleifend maximus tortor, at mollis.", 1250.0, ""); 
 		Product p4 = new Product(null, "PC Gamer", "Donec aliquet odio ac rhoncus cursus.", 1200.0, ""); 
@@ -82,6 +82,11 @@ public class TestConfig implements CommandLineRunner {
 		OrderItem oi4 = new OrderItem(o3, p5, 2, p5.getPrice());
 
 		orderItemRepository.saveAll(Arrays.asList(oi1, oi2, oi3, oi4));	
+		
+		Payment pay1 = new Payment(null, Instant.parse("2019-06-20T19:53:07Z"), o1);
+		o1.setPayment(pay1);
+		
+		orderRepository.save(o1);
 		
 	}
 }
