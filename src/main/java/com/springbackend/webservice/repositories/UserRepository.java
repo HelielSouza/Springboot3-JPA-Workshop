@@ -1,10 +1,10 @@
 package com.springbackend.webservice.repositories;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.security.core.userdetails.UserDetails;
+import java.util.Optional;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import com.springbackend.webservice.entities.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-	 UserDetails findByEmail(String email);
+	Optional<User> findByEmail(String email);
 }
