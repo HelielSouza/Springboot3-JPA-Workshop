@@ -59,6 +59,7 @@ public class UserService {
 
 	    repository.save(newUser);
 	}
+
 	
 	public void delete(Long id) {
 		try {
@@ -86,6 +87,7 @@ public class UserService {
 		entity.setEmail(obj.getEmail());
 		entity.setPhone(obj.getPhone());
 	}
+	
 	
     public RecoveryJwtTokenDto authenticateUser(LoginUserDto loginUserDto) {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =

@@ -5,14 +5,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.springbackend.webservice.entities.enums.RoleName;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Builder;
@@ -35,7 +38,11 @@ public class User implements Serializable {
 	private String phone;
 	private String password;
 	
-	private RoleName roleName;
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(name="users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name="role_id"))
+    private List<Role> roles;
 
 	@JsonIgnore
 	@Builder.Default
@@ -54,17 +61,17 @@ public class User implements Serializable {
 		this.password = password;
 	}
 	
-	public User(Long id, String name, String email, String phone, String password, RoleName roleName) {
+	public User(Long id, String name, String email, String phone, String password, List<Role> roles) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.email = email;
 		this.phone = phone;
 		this.password = password;
-		setRoleName(roleName);
+		this.roles = roles;
 	}
 	
-	public User(Long id, String name, String email, String phone, String password, RoleName roleName,
+	public User(Long id, String name, String email, String phone, String password,  List<Role> roles,
 			List<Order> orders) {
 		super();
 		this.id = id;
@@ -72,7 +79,7 @@ public class User implements Serializable {
 		this.email = email;
 		this.phone = phone;
 		this.password = password;
-		setRoleName(roleName);
+		this.roles = roles;
 		this.orders = orders;
 	}
 	
@@ -116,15 +123,11 @@ public class User implements Serializable {
 		this.password = password;
 	}
 	
-	public RoleName getRoleName() {
-		return roleName;
-	}
-	public void setRoleName(RoleName roleName) {
-		this.roleName = roleName;
+	public List<Role> getRoles() {
+		return roles;
 	}
 	
 	public List<Order> getOrders() {
 		return orders;
 	}
-	
 }
