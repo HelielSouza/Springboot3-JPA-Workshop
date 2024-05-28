@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.springbackend.webservice.dto.orders.CreateOrderDto;
 import com.springbackend.webservice.entities.Order;
 import com.springbackend.webservice.services.OrderService;
 
@@ -36,10 +37,10 @@ public class OrderResource {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Order> insert(@RequestBody Order obj) {
-		obj = service.insert(obj);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(obj.getId()).toUri();
-		return ResponseEntity.created(uri).body(obj);
-	}
+    public ResponseEntity<Order> insert(@RequestBody CreateOrderDto dto) {
+        Order order = service.insert(dto);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(order.getId()).toUri();
+        return ResponseEntity.created(uri).body(order);
+    }
 }
