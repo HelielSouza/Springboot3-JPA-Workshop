@@ -3,6 +3,7 @@ package com.springbackend.webservice.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,19 +23,17 @@ public class SecurityConfiguration {
     @Autowired
     private UserAuthenticationFilter userAuthenticationFilter;
 
-    public static final String [] ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED = {
-            "/users/login", 
-            "/users",
+    public static final String[] ENDPOINTS_GET = {
             "/users/**",
-            "/orders",
             "/orders/**",
-            "/products/",
             "/products/**",
-            "/categories",
-            "/categories/**",
-            
+            "/categories/**"
     };
 
+    public static final String[] ENDPOINTS_POST_NO_AUTH = {
+        "/users/login"
+    };
+        
     public static final String [] ENDPOINTS_WITH_AUTHENTICATION_REQUIRED = {
             "/users/test"
     };
@@ -49,14 +48,19 @@ public class SecurityConfiguration {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity.csrf(csrf -> csrf.disable()) 
-                .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).authorizeHttpRequests(requests -> requests 
-                .requestMatchers(ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED).permitAll()
-                .requestMatchers(ENDPOINTS_WITH_AUTHENTICATION_REQUIRED).authenticated()
+        return httpSecurity.csrf(csrf -> csrf.disable())
+            .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(requests -> requests
+                .requestMatchers(HttpMethod.GET, ENDPOINTS_GET).permitAll()
+                .requestMatchers(HttpMethod.POST, ENDPOINTS_POST_NO_AUTH).permitAll()
+                .requestMatchers(HttpMethod.POST, "/users/**", "/orders/**", "/products/**", "/categories/**").authenticated()
+                .requestMatchers(HttpMethod.PUT, "/users/**", "/orders/**", "/products/**", "/categories/**").authenticated()
+                .requestMatchers(HttpMethod.DELETE, "/users/**", "/orders/**", "/products/**", "/categories/**").authenticated()
                 .requestMatchers(ENDPOINTS_ADMIN).hasRole("ADMINISTRATOR") 
                 .requestMatchers(ENDPOINTS_CUSTOMER).hasRole("CUSTOMER")
-                .anyRequest().denyAll()).addFilterBefore(userAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+                .anyRequest().authenticated())
+            .addFilterBefore(userAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .build();
     }
 
     @Bean

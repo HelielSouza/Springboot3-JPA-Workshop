@@ -64,7 +64,7 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
 
  private boolean checkIfEndpointIsNotPublic(HttpServletRequest request) {
      String requestURI = request.getRequestURI();
-     for (String endpoint : SecurityConfiguration.ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED) {
+     for (String endpoint : SecurityConfiguration.ENDPOINTS_GET) {
          if (antPathMatcher.match(endpoint, requestURI)) {
              return false;
          }
