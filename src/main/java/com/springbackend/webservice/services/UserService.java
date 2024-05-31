@@ -103,7 +103,7 @@ public class UserService {
             Role role = roleRepository.findByName(roleName);
             if (role == null) {
                 role = Role.builder().name(roleName).build();
-                roleRepository.save(role); // Save the new role to the repository
+                roleRepository.save(role); 
             }
             roles.add(role);
         }

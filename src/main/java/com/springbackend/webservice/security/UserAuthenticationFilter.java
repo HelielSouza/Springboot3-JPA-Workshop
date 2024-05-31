@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.springbackend.webservice.entities.User;
 import com.springbackend.webservice.entities.implementations.UserDetailsImpl;
 import com.springbackend.webservice.repositories.UserRepository;
@@ -36,12 +37,25 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
         if (checkIfEndpointIsNotPublic(request)) {
             String token = recoveryToken(request);
             if (token != null) {
-                String subject = jwtTokenService.getSubjectFromToken(token);
-                User user = userRepository.findByEmail(subject).orElse(null);
-                if (user != null) {
-                    UserDetailsImpl userDetails = new UserDetailsImpl(user);
-                    Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                try {
+                    String subject = jwtTokenService.getSubjectFromToken(token);
+                    User user = userRepository.findByEmail(subject).orElse(null);
+                    if (user != null) {
+                        UserDetailsImpl userDetails = new UserDetailsImpl(user);
+                        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                                userDetails, null, userDetails.getAuthorities());
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                        System.out.println("User authenticated: " + userDetails.getUsername());
+                    } else {
+                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                        response.getWriter().write("User not found");
+                        return;
+                    }
+                } catch (JWTVerificationException e) {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.getWriter().write("Invalid or expired token");
+                    System.out.println("Invalid or expired token: " + e.getMessage());  // Log do erro
+                    return;
                 }
             } else {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

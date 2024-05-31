@@ -30,7 +30,7 @@ public class SecurityConfiguration {
     };
 
     public static final String[] ENDPOINTS_POST_NO_AUTH = {
-        "/users/login"
+    		"/users/login"
     };
         
     public static final String[] ENDPOINTS_WITH_AUTHENTICATION_REQUIRED = {
@@ -59,15 +59,14 @@ public class SecurityConfiguration {
             .authorizeHttpRequests(requests -> requests
                 .requestMatchers(HttpMethod.GET, ENDPOINTS_GET).permitAll()
                 .requestMatchers(HttpMethod.POST, ENDPOINTS_POST_NO_AUTH).permitAll()
-                .requestMatchers(ENDPOINTS_PUBLIC).permitAll()
+                .requestMatchers(HttpMethod.GET, ENDPOINTS_WITH_AUTHENTICATION_REQUIRED).authenticated()
                 .requestMatchers(HttpMethod.POST, "/users/**", "/orders/**", "/products/**", "/categories/**").authenticated()
                 .requestMatchers(HttpMethod.PUT, "/users/**", "/orders/**", "/products/**", "/categories/**").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/users/**", "/orders/**", "/products/**", "/categories/**").authenticated()
                 .requestMatchers(ENDPOINTS_ADMIN).hasRole("ADMINISTRATOR") 
                 .requestMatchers(ENDPOINTS_CUSTOMER).hasRole("CUSTOMER")
-                .anyRequest().authenticated())
-            	
-            
+                .requestMatchers(ENDPOINTS_PUBLIC).permitAll()
+                .anyRequest().denyAll())
             .addFilterBefore(userAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
             .build();
     }

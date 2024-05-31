@@ -23,12 +23,11 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getRoles()
-                .stream()
-                .filter(role -> role.getName() != null) 
-                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
-                .collect(Collectors.toList());
+        return user.getRoles().stream()
+                   .map(role -> new SimpleGrantedAuthority(role.getName().name()))
+                   .collect(Collectors.toList());
     }
+    
     @Override
     public String getPassword() {
         return user.getPassword();
