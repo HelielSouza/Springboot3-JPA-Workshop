@@ -15,7 +15,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
@@ -34,31 +33,41 @@ public class SecurityConfiguration {
         "/users/login"
     };
         
-    public static final String [] ENDPOINTS_WITH_AUTHENTICATION_REQUIRED = {
+    public static final String[] ENDPOINTS_WITH_AUTHENTICATION_REQUIRED = {
             "/users/test"
     };
 
-    public static final String [] ENDPOINTS_CUSTOMER = {
+    public static final String[] ENDPOINTS_CUSTOMER = {
             "/users/test/customer"
     };
 
-    public static final String [] ENDPOINTS_ADMIN = {
+    public static final String[] ENDPOINTS_ADMIN = {
             "/users/test/administrator"
+    };
+
+    public static final String[] ENDPOINTS_PUBLIC = {
+            "/h2-console/**"
     };
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.csrf(csrf -> csrf.disable())
+        	.headers(headers -> headers.frameOptions(frameOptions -> frameOptions
+                    .sameOrigin()
+        	        ))
             .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(requests -> requests
                 .requestMatchers(HttpMethod.GET, ENDPOINTS_GET).permitAll()
                 .requestMatchers(HttpMethod.POST, ENDPOINTS_POST_NO_AUTH).permitAll()
+                .requestMatchers(ENDPOINTS_PUBLIC).permitAll()
                 .requestMatchers(HttpMethod.POST, "/users/**", "/orders/**", "/products/**", "/categories/**").authenticated()
                 .requestMatchers(HttpMethod.PUT, "/users/**", "/orders/**", "/products/**", "/categories/**").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/users/**", "/orders/**", "/products/**", "/categories/**").authenticated()
                 .requestMatchers(ENDPOINTS_ADMIN).hasRole("ADMINISTRATOR") 
                 .requestMatchers(ENDPOINTS_CUSTOMER).hasRole("CUSTOMER")
                 .anyRequest().authenticated())
+            	
+            
             .addFilterBefore(userAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
             .build();
     }
