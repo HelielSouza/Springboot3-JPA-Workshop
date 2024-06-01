@@ -1,6 +1,5 @@
 package com.springbackend.webservice.services;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,9 +16,7 @@ import com.springbackend.webservice.dto.LoginUserDto;
 import com.springbackend.webservice.dto.RecoveryJwtTokenDto;
 import com.springbackend.webservice.entities.Role;
 import com.springbackend.webservice.entities.User;
-import com.springbackend.webservice.entities.enums.RoleName;
 import com.springbackend.webservice.entities.implementations.UserDetailsImpl;
-import com.springbackend.webservice.repositories.RoleRepository;
 import com.springbackend.webservice.repositories.UserRepository;
 import com.springbackend.webservice.security.SecurityConfiguration;
 import com.springbackend.webservice.services.exceptions.DatabaseException;
@@ -42,8 +39,6 @@ public class UserService {
     @Autowired
     private SecurityConfiguration securityConfiguration;
     
-    @Autowired
-    private RoleRepository roleRepository;
     
 	public List<User> findAll() {
 		return repository.findAll();
@@ -54,15 +49,14 @@ public class UserService {
 		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 	
-  public void createUser(CreateUserDto createUserDto) {
-        List<Role> roles = getOrCreateRoles(createUserDto.roles());
-         
+	public void createUser(CreateUserDto createUserDto) {
+
         User newUser = User.builder()
-                .name(createUserDto.name())
+        		.name(createUserDto.name())
                 .email(createUserDto.email())
-                .password(securityConfiguration.passwordEncoder().encode(createUserDto.password()))
                 .phone(createUserDto.phone())
-                .roles(roles)
+                .password(securityConfiguration.passwordEncoder().encode(createUserDto.password()))
+                .roles(List.of(Role.builder().name(createUserDto.role()).build()))
                 .build();
 
         repository.save(newUser);
@@ -95,23 +89,9 @@ public class UserService {
 		entity.setEmail(obj.getEmail());
 		entity.setPhone(obj.getPhone());
 	}
-	
-	private List<Role> getOrCreateRoles(List<RoleName> roleNames) {
-        List<Role> roles = new ArrayList<>();
 
-        for (RoleName roleName : roleNames) {
-            Role role = roleRepository.findByName(roleName);
-            if (role == null) {
-                role = Role.builder().name(roleName).build();
-                roleRepository.save(role); 
-            }
-            roles.add(role);
-        }
-
-        return roles;
-    }
 	
-    public RecoveryJwtTokenDto authenticateUser(LoginUserDto loginUserDto) {
+	public RecoveryJwtTokenDto authenticateUser(LoginUserDto loginUserDto) {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                 new UsernamePasswordAuthenticationToken(loginUserDto.email(), loginUserDto.password());
 

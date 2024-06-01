@@ -1,7 +1,5 @@
 package com.springbackend.webservice.dto;
 
-import java.util.List;
-
 import com.springbackend.webservice.entities.enums.RoleName;
 
 public record CreateUserDto(
@@ -10,6 +8,6 @@ public record CreateUserDto(
         String email,
         String password,
         String phone,
-        List<RoleName> roles
+        RoleName role
 ) {
 }

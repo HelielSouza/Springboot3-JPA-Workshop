@@ -14,7 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
@@ -30,9 +29,9 @@ public class SecurityConfiguration {
     };
 
     public static final String[] ENDPOINTS_POST_NO_AUTH = {
-    		"/users/login"
+            "/users/login"
     };
-        
+
     public static final String[] ENDPOINTS_WITH_AUTHENTICATION_REQUIRED = {
             "/users/test"
     };
@@ -52,23 +51,21 @@ public class SecurityConfiguration {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.csrf(csrf -> csrf.disable())
-        	.headers(headers -> headers.frameOptions(frameOptions -> frameOptions
-                    .sameOrigin()
-        	        ))
-            .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(requests -> requests
-                .requestMatchers(HttpMethod.GET, ENDPOINTS_GET).permitAll()
-                .requestMatchers(HttpMethod.POST, ENDPOINTS_POST_NO_AUTH).permitAll()
-                .requestMatchers(HttpMethod.GET, ENDPOINTS_WITH_AUTHENTICATION_REQUIRED).authenticated()
-                .requestMatchers(HttpMethod.POST, "/users/**", "/orders/**", "/products/**", "/categories/**").authenticated()
-                .requestMatchers(HttpMethod.PUT, "/users/**", "/orders/**", "/products/**", "/categories/**").authenticated()
-                .requestMatchers(HttpMethod.DELETE, "/users/**", "/orders/**", "/products/**", "/categories/**").authenticated()
-                .requestMatchers(ENDPOINTS_ADMIN).hasRole("ADMINISTRATOR") 
-                .requestMatchers(ENDPOINTS_CUSTOMER).hasRole("CUSTOMER")
-                .requestMatchers(ENDPOINTS_PUBLIC).permitAll()
-                .anyRequest().denyAll())
-            .addFilterBefore(userAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-            .build();
+                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()))
+                .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(requests -> requests
+                        .requestMatchers(HttpMethod.GET, ENDPOINTS_GET).permitAll()
+                        .requestMatchers(HttpMethod.POST, ENDPOINTS_POST_NO_AUTH).permitAll()
+                        .requestMatchers(HttpMethod.GET, ENDPOINTS_WITH_AUTHENTICATION_REQUIRED).authenticated()
+                        .requestMatchers(HttpMethod.POST, "/users/**", "/orders/**", "/products/**", "/categories/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/users/**", "/orders/**", "/products/**", "/categories/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/users/**", "/orders/**", "/products/**", "/categories/**").authenticated()
+                        .requestMatchers(ENDPOINTS_ADMIN).hasRole("ADMINISTRATOR")
+                        .requestMatchers(ENDPOINTS_CUSTOMER).hasRole("CUSTOMER")
+                        .requestMatchers(ENDPOINTS_PUBLIC).permitAll()
+                        .anyRequest().denyAll())
+                .addFilterBefore(userAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 
     @Bean
@@ -80,5 +77,4 @@ public class SecurityConfiguration {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 }

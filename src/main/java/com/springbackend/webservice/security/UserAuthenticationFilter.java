@@ -42,19 +42,25 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
                     User user = userRepository.findByEmail(subject).orElse(null);
                     if (user != null) {
                         UserDetailsImpl userDetails = new UserDetailsImpl(user);
-                        Authentication authentication = new UsernamePasswordAuthenticationToken(
-                                userDetails, null, userDetails.getAuthorities());
-                        SecurityContextHolder.getContext().setAuthentication(authentication);
-                        System.out.println("User authenticated: " + userDetails.getUsername());
+                        if (jwtTokenService.validateToken(token, userDetails)) {
+                            Authentication authentication = new UsernamePasswordAuthenticationToken(
+                                    userDetails, null, userDetails.getAuthorities());
+                            SecurityContextHolder.getContext().setAuthentication(authentication);
+                            System.out.println("User authenticated: " + userDetails.getUsername());
+                        } else {
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.getWriter().write("Invalid or expired token");
+                            return;
+                        }
                     } else {
                         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                         response.getWriter().write("User not found");
                         return;
                     }
-                } catch (JWTVerificationException e) {
+                } catch (Exception e) {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     response.getWriter().write("Invalid or expired token");
-                    System.out.println("Invalid or expired token: " + e.getMessage());  // Log do erro
+                    System.out.println("Invalid or expired token: " + e.getMessage());
                     return;
                 }
             } else {
@@ -68,7 +74,7 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
 
     private String recoveryToken(HttpServletRequest request) {
         String authorizationHeader = request.getHeader("Authorization");
-        if (authorizationHeader != null) {
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             return authorizationHeader.replace("Bearer ", "");
         }
         return null;
