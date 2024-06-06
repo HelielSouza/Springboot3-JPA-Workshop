@@ -6,19 +6,12 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.springbackend.webservice.dto.CreateUserDto;
-import com.springbackend.webservice.dto.LoginUserDto;
-import com.springbackend.webservice.dto.RecoveryJwtTokenDto;
-import com.springbackend.webservice.entities.Role;
 import com.springbackend.webservice.entities.User;
-import com.springbackend.webservice.entities.implementations.UserDetailsImpl;
 import com.springbackend.webservice.repositories.UserRepository;
-import com.springbackend.webservice.security.SecurityConfiguration;
 import com.springbackend.webservice.services.exceptions.DatabaseException;
 import com.springbackend.webservice.services.exceptions.ResourceNotFoundException;
 
@@ -28,18 +21,12 @@ import jakarta.persistence.EntityNotFoundException;
 public class UserService {
 
 	@Autowired
-	private UserRepository repository;
-	
-	@Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private JwtTokenService jwtTokenService;
-
-    @Autowired
-    private SecurityConfiguration securityConfiguration;
+	private UserRepository repository;   
     
-    
+	public UserService(UserRepository repository) {
+		this.repository = repository;
+	}
+
 	public List<User> findAll() {
 		return repository.findAll();
 	}
@@ -49,19 +36,18 @@ public class UserService {
 		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 	
-	public void createUser(CreateUserDto createUserDto) {
-
-        User newUser = User.builder()
-        		.name(createUserDto.name())
-                .email(createUserDto.email())
-                .phone(createUserDto.phone())
-                .password(securityConfiguration.passwordEncoder().encode(createUserDto.password()))
-                .roles(List.of(Role.builder().name(createUserDto.role()).build()))
-                .build();
-
-        repository.save(newUser);
-    }
-
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		var user = repository.findByUsername(username);
+		if (user != null) {
+			return user;
+		} else {
+			throw new UsernameNotFoundException("Username " + username + " not found");
+		}
+	}
+	
+	public User insert(User obj) {
+		return repository.save(obj);
+	}
 	
 	public void delete(Long id) {
 		try {
@@ -85,20 +71,8 @@ public class UserService {
 	}
 	
 	private void updateData(User entity, User obj) {
-		entity.setName(obj.getName());
+		entity.setFullName(obj.getFullName());
 		entity.setEmail(obj.getEmail());
 		entity.setPhone(obj.getPhone());
 	}
-
-	
-	public RecoveryJwtTokenDto authenticateUser(LoginUserDto loginUserDto) {
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                new UsernamePasswordAuthenticationToken(loginUserDto.email(), loginUserDto.password());
-
-        Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
-
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-
-        return new RecoveryJwtTokenDto(jwtTokenService.generateToken(userDetails));
-    }
 }

@@ -1,9 +1,9 @@
 package com.springbackend.webservice.resources;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,10 +13,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.springbackend.webservice.dto.CreateUserDto;
-import com.springbackend.webservice.dto.LoginUserDto;
-import com.springbackend.webservice.dto.RecoveryJwtTokenDto;
 import com.springbackend.webservice.entities.User;
 import com.springbackend.webservice.services.UserService;
 
@@ -40,10 +38,13 @@ public class UserResource {
 	}
 	
 	@PostMapping
-    public ResponseEntity<Void> createUser(@RequestBody CreateUserDto createUserDto) {
-        service.createUser(createUserDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
+	public ResponseEntity<User> insert(@RequestBody User obj) {
+		obj = service.insert(obj);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(obj.getId()).toUri();
+		return ResponseEntity.created(uri).body(obj);
+	}
+	
 	
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
@@ -57,29 +58,5 @@ public class UserResource {
 		obj = service.update(id, obj);
 		return ResponseEntity.ok().body(obj);
 	}
-	
-	@PostMapping("/login")
-    public ResponseEntity<RecoveryJwtTokenDto> authenticateUser(@RequestBody LoginUserDto loginUserDto) {
-        RecoveryJwtTokenDto token = service.authenticateUser(loginUserDto);
-        return new ResponseEntity<>(token, HttpStatus.OK);
-    }
-	
-	@GetMapping("/test")
-    public ResponseEntity<String> getAuthenticationTest() {
-        return new ResponseEntity<>("Succesfully authenticated", HttpStatus.OK);
-    }
-
-    @GetMapping("/test/customer")
-    public ResponseEntity<String> getCustomerAuthenticationTest() {
-        return new ResponseEntity<>("Client Succesfully authenticated", HttpStatus.OK);
-    }
-
-    @GetMapping("/test/administrator")
-    public ResponseEntity<String> getAdminAuthenticationTest() {
-        return new ResponseEntity<>("Administrator Succesfully authenticated", HttpStatus.OK);
-    }
-	
-	
-	
 }
  
