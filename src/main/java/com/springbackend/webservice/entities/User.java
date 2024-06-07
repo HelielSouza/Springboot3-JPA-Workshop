@@ -30,6 +30,7 @@ public class User implements UserDetails, Serializable {
 	
 	@Id
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
+	@Column(name = "id_user")
 	private Long id;
 	
 	@Column(name = "username")
@@ -68,18 +69,20 @@ public class User implements UserDetails, Serializable {
 			inverseJoinColumns = { @JoinColumn (name = "id_permission")})
 	private List<Permission> permissions;
 	
-	public List<String> getRoles() {
-		List<String> roles = new ArrayList<>();
-		for (Permission permission : this.permissions) {
-			roles.add(permission.getDescription());
-		}
-		return roles;
-	}
+	public User() {}
 	
-	public User() {
-		
+	public User(Long id, String userName, String fullName, String email, String phone, String password,
+			List<Permission> permissions) {
+		super();
+		this.id = id;
+		this.userName = userName;
+		this.fullName = fullName;
+		this.email = email;
+		this.phone = phone;
+		this.password = password;
+		this.permissions = permissions;
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -156,6 +159,14 @@ public class User implements UserDetails, Serializable {
 		this.enabled = enabled;
 	}
 
+	public List<String> getRoles() {
+		List<String> roles = new ArrayList<>();
+		for (Permission permission : this.permissions) {
+			roles.add(permission.getDescription());
+		}
+		return roles;
+	}
+	
 	public List<Permission> getPermissions() {
 		return permissions;
 	}

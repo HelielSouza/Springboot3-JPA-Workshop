@@ -6,8 +6,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.springbackend.webservice.entities.User;
@@ -34,15 +32,6 @@ public class UserService {
 	public User findByID(Long id) {
 		Optional<User> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
-	}
-	
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		var user = repository.findByUsername(username);
-		if (user != null) {
-			return user;
-		} else {
-			throw new UsernameNotFoundException("Username " + username + " not found");
-		}
 	}
 	
 	public User insert(User obj) {

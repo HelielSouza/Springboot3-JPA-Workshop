@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -27,6 +28,17 @@ public class SecurityConfig {
 
 	@Autowired
 	private JwtTokenProvider tokenProvider;
+	
+	public static final String[] ENDPOINTS_GET = {
+            "/users/**",
+            "/orders/**",
+            "/products/**",
+            "/categories/**"
+    };
+
+	public static final String[] ENDPOINTS_PUBLIC = {
+            "/h2-console/**"
+    };
 	
 	@Bean
 	PasswordEncoder passwordEncoder() {
@@ -61,14 +73,15 @@ public class SecurityConfig {
             		session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                     authorizeHttpRequests -> authorizeHttpRequests
-                        .requestMatchers(
+                    	.requestMatchers(HttpMethod.GET, ENDPOINTS_GET).permitAll()
+                    	.requestMatchers(ENDPOINTS_PUBLIC).permitAll()
+                    	.requestMatchers(HttpMethod.POST, "/users/**", "/orders/**", "/products/**", "/categories/**").authenticated()
+	                    .requestMatchers(HttpMethod.PUT, "/users/**", "/orders/**", "/products/**", "/categories/**").authenticated()
+	                    .requestMatchers(HttpMethod.DELETE, "/users/**", "/orders/**", "/products/**", "/categories/**").authenticated()
+	                    .requestMatchers(
 							"/auth/signin",
-							"/auth/refresh/**",
-                    		"/swagger-ui/**",
-                    		"/v3/api-docs/**"
+							"/auth/refresh/**"
                 		).permitAll()
-                        .requestMatchers("/api/**").authenticated()
-                        .requestMatchers("/users").denyAll()
                 )
             .cors(cors -> {})
                 .build();

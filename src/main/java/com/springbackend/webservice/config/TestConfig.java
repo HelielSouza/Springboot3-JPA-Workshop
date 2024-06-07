@@ -7,18 +7,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.springbackend.webservice.entities.Category;
 import com.springbackend.webservice.entities.Order;
 import com.springbackend.webservice.entities.OrderItem;
 import com.springbackend.webservice.entities.Payment;
+import com.springbackend.webservice.entities.Permission;
 import com.springbackend.webservice.entities.Product;
 import com.springbackend.webservice.entities.User;
 import com.springbackend.webservice.entities.enums.OrderStatus;
 import com.springbackend.webservice.repositories.CategoryRepository;
 import com.springbackend.webservice.repositories.OrderItemRepository;
 import com.springbackend.webservice.repositories.OrderRepository;
+import com.springbackend.webservice.repositories.PermissionRepository;
 import com.springbackend.webservice.repositories.ProductRepository;
 import com.springbackend.webservice.repositories.UserRepository;
 
@@ -42,7 +43,7 @@ public class TestConfig implements CommandLineRunner {
 	private OrderItemRepository orderItemRepository;
 	
 	@Autowired
-    private PasswordEncoder passwordEncoder;
+	private PermissionRepository permissionRepository;
 	
 	 
 	@Override
@@ -71,21 +72,22 @@ public class TestConfig implements CommandLineRunner {
 		// Saving again
 		productRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5));
 		
-		// !!!
-		//Role r1 = new Role(null, RoleName.ROLE_ADMINISTRATOR); 
-		//Role r2 = new Role(null, RoleName.ROLE_CUSTOMER);
+		Permission perm1 = new Permission(null, "ADMIN");
+		Permission perm2 = new Permission(null, "MANAGER");
+		Permission perm3 = new Permission(null, "COMMON_USER");
 		
-		//User u1 = new User(null, "Maria Brown", "maria@gmail.com", "988888888", passwordEncoder.encode("123456")); 
-		//User u2 = new User(null, "Alex Green", "alex@gmail.com", "977777777", passwordEncoder.encode("123456")); 
-		User u3 = new User(null, "Maria Brown", "teste1@gmail.com", "988888888", passwordEncoder.encode("123456"), Arrays.asList(r1));
-		User u4 = new User(null, "Maria Brown", "teste2@gmail.com", "988888888", passwordEncoder.encode("123456"), Arrays.asList(r2));
-		User u5 = new User(null, "Maria Brown", "teste3@gmail.com", "988888888", passwordEncoder.encode("123456"), Arrays.asList(r1, r2)); 
-																										 
+		permissionRepository.saveAll(Arrays.asList(perm1, perm2, perm3));
+		
+		// pass: 12345 
+		User u1 = new User(null, "maria", "Maria Bowen", "maria@gmail.com", "988888888", "12345", Arrays.asList(perm1)); 
+		User u2 = new User(null, "alex", "Alex Green", "alex@gmail.com", "977777777", "$2a$16$e.hf4oRnuJJfpFQsr0edPu0E0gXZEKhqvCYU2Tcd172J2LsXv5ira", Arrays.asList(perm2)); 
+		User u3 = new User(null, "john", "john Doe", "john@gmail.com", "977777799", "$2a$16$e.hf4oRnuJJfpFQsr0edPu0E0gXZEKhqvCYU2Tcd172J2LsXv5ira", Arrays.asList(perm3)); 
+																								 
 		Order o1 = new Order(null, Instant.parse("2019-06-20T19:53:07Z"), u1, OrderStatus.PAID); 
 		Order o2 = new Order(null, Instant.parse("2019-07-21T03:42:10Z"), u2, OrderStatus.WAITING_PAYMENT); 
 		Order o3 = new Order(null, Instant.parse("2019-07-22T15:21:22Z"), u1, OrderStatus.WAITING_PAYMENT); 
 		
-		userRepository.saveAll(Arrays.asList(u1, u2, u3, u4, u5));
+		userRepository.saveAll(Arrays.asList(u1, u2, u3));
 		orderRepository.saveAll(Arrays.asList(o1, o2, o3));
 		
 		OrderItem oi1 = new OrderItem(o1, p1, 2, p1.getPrice());
@@ -99,6 +101,5 @@ public class TestConfig implements CommandLineRunner {
 		o1.setPayment(pay1);
 		
 		orderRepository.save(o1);
-		
 	}
 }

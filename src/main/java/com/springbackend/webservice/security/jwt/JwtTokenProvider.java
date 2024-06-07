@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,10 +26,8 @@ import jakarta.servlet.http.HttpServletRequest;
 @Service
 public class JwtTokenProvider {
 
-	@Value("${security.jwt.token.secret-key:secret}")
 	private String secretKey = "secret";
 	
-	@Value("${security.jwt.token.expire-length:3600000}")
 	private long validityInMilliseconds = 3600000; // 1h
 	
 	@Autowired
@@ -106,7 +103,6 @@ public class JwtTokenProvider {
 	public String resolveToken(HttpServletRequest req) {
 		String bearerToken = req.getHeader("Authorization");
 		
-		// Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsZWFuZHJvIiwicm9sZXMiOlsiQURNSU4iLCJNQU5BR0VSIl0sImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImV4cCI6MTY1MjcxOTUzOCwiaWF0IjoxNjUyNzE1OTM4fQ.muu8eStsRobqLyrFYLHRiEvOSHAcss4ohSNtmwWTRcY
 		if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
 			return bearerToken.substring("Bearer ".length());
 		}

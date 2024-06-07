@@ -22,9 +22,13 @@ public class Permission implements GrantedAuthority, Serializable {
 	
 	private String description;
 
-	@Override
-	public String getAuthority() {
-		return this.description;
+	
+	public Permission() {}
+
+	public Permission(Long id, String description) {
+		super();
+		this.id = id;
+		this.description = description;
 	}
 
 	public Long getId() {
@@ -41,6 +45,11 @@ public class Permission implements GrantedAuthority, Serializable {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	@Override
+	public String getAuthority() {
+		return this.description;
 	}
 
 	@Override
