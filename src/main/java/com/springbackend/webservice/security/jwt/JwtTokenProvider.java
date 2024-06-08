@@ -23,11 +23,13 @@ import com.springbackend.webservice.resources.exceptions.InvalidJwtAuthenticatio
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 
+
 @Service
 public class JwtTokenProvider {
 
-	private String secretKey = "secret";
 	
+	private String secretKey = "53ccr37";
+
 	private long validityInMilliseconds = 3600000; // 1h
 	
 	@Autowired
@@ -103,6 +105,7 @@ public class JwtTokenProvider {
 	public String resolveToken(HttpServletRequest req) {
 		String bearerToken = req.getHeader("Authorization");
 		
+		// Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsZWFuZHJvIiwicm9sZXMiOlsiQURNSU4iLCJNQU5BR0VSIl0sImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImV4cCI6MTY1MjcxOTUzOCwiaWF0IjoxNjUyNzE1OTM4fQ.muu8eStsRobqLyrFYLHRiEvOSHAcss4ohSNtmwWTRcY
 		if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
 			return bearerToken.substring("Bearer ".length());
 		}

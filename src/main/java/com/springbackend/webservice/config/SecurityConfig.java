@@ -78,10 +78,7 @@ public class SecurityConfig {
                     	.requestMatchers(HttpMethod.POST, "/users/**", "/orders/**", "/products/**", "/categories/**").authenticated()
 	                    .requestMatchers(HttpMethod.PUT, "/users/**", "/orders/**", "/products/**", "/categories/**").authenticated()
 	                    .requestMatchers(HttpMethod.DELETE, "/users/**", "/orders/**", "/products/**", "/categories/**").authenticated()
-	                    .requestMatchers(
-							"/auth/signin",
-							"/auth/refresh/**"
-                		).permitAll()
+	                    .requestMatchers("/auth/signin", "/auth/refresh/**").permitAll()
                 )
             .cors(cors -> {})
                 .build();

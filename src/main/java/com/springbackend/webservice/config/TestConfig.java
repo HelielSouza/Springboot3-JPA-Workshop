@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.springbackend.webservice.entities.Category;
 import com.springbackend.webservice.entities.Order;
@@ -45,6 +46,9 @@ public class TestConfig implements CommandLineRunner {
 	@Autowired
 	private PermissionRepository permissionRepository;
 	
+	@Autowired
+    private PasswordEncoder passwordEncoder;
+	
 	 
 	@Override
 	public void run(String... args) throws Exception {
@@ -78,10 +82,12 @@ public class TestConfig implements CommandLineRunner {
 		
 		permissionRepository.saveAll(Arrays.asList(perm1, perm2, perm3));
 		
-		// pass: 12345 
-		User u1 = new User(null, "maria", "Maria Bowen", "maria@gmail.com", "988888888", "12345", Arrays.asList(perm1)); 
-		User u2 = new User(null, "alex", "Alex Green", "alex@gmail.com", "977777777", "$2a$16$e.hf4oRnuJJfpFQsr0edPu0E0gXZEKhqvCYU2Tcd172J2LsXv5ira", Arrays.asList(perm2)); 
-		User u3 = new User(null, "john", "john Doe", "john@gmail.com", "977777799", "$2a$16$e.hf4oRnuJJfpFQsr0edPu0E0gXZEKhqvCYU2Tcd172J2LsXv5ira", Arrays.asList(perm3)); 
+		
+		String encryptedPassword = passwordEncoder.encode("12345");
+
+        User u1 = new User(null, "maria", "Maria Bowen", "maria@gmail.com", "988888888", encryptedPassword, Arrays.asList(perm1)); 
+        User u2 = new User(null, "alex", "Alex Green", "alex@gmail.com", "977777777", encryptedPassword, Arrays.asList(perm2)); 
+        User u3 = new User(null, "john", "John Doe", "john@gmail.com", "977777799", encryptedPassword, Arrays.asList(perm3)); 
 																								 
 		Order o1 = new Order(null, Instant.parse("2019-06-20T19:53:07Z"), u1, OrderStatus.PAID); 
 		Order o2 = new Order(null, Instant.parse("2019-07-21T03:42:10Z"), u2, OrderStatus.WAITING_PAYMENT); 

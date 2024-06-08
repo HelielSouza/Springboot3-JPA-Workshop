@@ -31,16 +31,21 @@ public class AuthService {
 	public ResponseEntity signin(AccountCredentialsVO data) {
 		try {
 			var username = data.getUsername();
+			System.out.println("username: " + username);
 			var password = data.getPassword();
+			System.out.println("pass: "+ password);
 			authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(username, password));
 			
 			var user = repository.findByUsername(username);
+			System.out.println("USERNAME FOUND AT DATABASE: " + username);
 			
 			var tokenResponse = new TokenVO();
 			if (user != null) {
+				System.out.println("user is not null -------> ");
 				tokenResponse = tokenProvider.createAccessToken(username, user.getRoles());
 			} else {
+				System.out.println("user is null, problem in auth :(");
 				throw new UsernameNotFoundException("Username " + username + " not found!");
 			}
 			return ResponseEntity.ok(tokenResponse);

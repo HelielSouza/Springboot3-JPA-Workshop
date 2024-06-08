@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.springbackend.webservice.entities.vo.AccountCredentialsVO;
 import com.springbackend.webservice.services.AuthService;
+import java.util.logging.Logger;
 
 
 @RestController
@@ -22,12 +23,18 @@ public class AuthResource {
 	@Autowired
 	AuthService authServices;
 	
+	private Logger logger = Logger.getLogger(AuthResource.class.getName());
+	
 	@SuppressWarnings("rawtypes")
 	@PostMapping(value = "/signin")
 	public ResponseEntity signin(@RequestBody AccountCredentialsVO data) {
-		if (checkIfParamsIsNotNull(data))
+		if (checkIfParamsIsNotNull(data)) {
+			logger.info("nuLLLL PARAMS");
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid client request!");
+		}
+		System.out.println("DATAAAAA: " + data);
 		var token = authServices.signin(data);
+		logger.info("TOKEN TA AQUI ---<");
 		if (token == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid client request!");
 		return token;
 	}
