@@ -70,8 +70,9 @@ public class User implements UserDetails, Serializable {
 	private List<Permission> permissions;
 	
 	public User() {}
-	
+
 	public User(Long id, String userName, String fullName, String email, String phone, String password,
+			Boolean accountNonExpired, Boolean accountNonLocked, Boolean credentialsNonExpired, Boolean enabled,
 			List<Permission> permissions) {
 		super();
 		this.id = id;
@@ -80,6 +81,10 @@ public class User implements UserDetails, Serializable {
 		this.email = email;
 		this.phone = phone;
 		this.password = password;
+		this.accountNonExpired = accountNonExpired;
+		this.accountNonLocked = accountNonLocked;
+		this.credentialsNonExpired = credentialsNonExpired;
+		this.enabled = enabled;
 		this.permissions = permissions;
 	}
 
