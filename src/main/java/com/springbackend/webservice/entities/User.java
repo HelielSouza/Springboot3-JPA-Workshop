@@ -65,7 +65,7 @@ public class User implements UserDetails, Serializable {
 	private List<Order> orders = new ArrayList<>();
 
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "user_permission", joinColumns = { @JoinColumn (name = "id_user") },
+	@JoinTable(name = "tb_user_permission", joinColumns = { @JoinColumn (name = "id_user") },
 			inverseJoinColumns = { @JoinColumn (name = "id_permission")})
 	private List<Permission> permissions;
 	
@@ -163,7 +163,8 @@ public class User implements UserDetails, Serializable {
 	public void setEnabled(Boolean enabled) {
 		this.enabled = enabled;
 	}
-
+		
+	@JsonIgnore
 	public List<String> getRoles() {
 		List<String> roles = new ArrayList<>();
 		for (Permission permission : this.permissions) {
@@ -185,6 +186,7 @@ public class User implements UserDetails, Serializable {
 	}
 
 	@Override
+	@JsonIgnore
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return this.permissions;
 	}
@@ -195,6 +197,7 @@ public class User implements UserDetails, Serializable {
 	}
 
 	@Override
+	@JsonIgnore
 	public String getUsername() {
 		return this.userName;
 	}

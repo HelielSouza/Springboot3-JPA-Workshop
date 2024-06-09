@@ -37,7 +37,8 @@ public class SecurityConfig {
     };
 
 	public static final String[] ENDPOINTS_PUBLIC = {
-            "/h2-console/**"
+            "/h2-console/**",
+            "/home/**"
     };
 	
 	@Bean
@@ -76,6 +77,7 @@ public class SecurityConfig {
             		session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                     authorizeHttpRequests -> authorizeHttpRequests
+                    	.requestMatchers("/resources/**").permitAll()
                     	.requestMatchers(HttpMethod.GET, ENDPOINTS_GET).permitAll()
                     	.requestMatchers(ENDPOINTS_PUBLIC).permitAll()
                     	.requestMatchers(HttpMethod.POST, "/users/**", "/orders/**", "/products/**", "/categories/**").authenticated()
