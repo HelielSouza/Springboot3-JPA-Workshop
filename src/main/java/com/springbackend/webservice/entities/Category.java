@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,7 +22,10 @@ public class Category implements Serializable{
 	
 	@Id
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
+	@Column(name = "id_category")
 	private Long id;
+	
+	@Column(name = "name")
 	private String name;
 	
 	// Association whit Product entity
@@ -29,8 +33,8 @@ public class Category implements Serializable{
 	@ManyToMany(mappedBy = "categories")
 	private Set<Product> products = new HashSet<>();
 	
-	public Category() {
-	}
+	public Category() {}
+	
 	public Category(Long id, String name) {
 		super();
 		this.id = id;
@@ -56,6 +60,7 @@ public class Category implements Serializable{
 	public Set<Product> getProducts() {
 		return products;
 	}
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);

@@ -6,6 +6,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.springbackend.webservice.entities.pk.OrderItemPK;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -18,11 +19,13 @@ public class OrderItem implements Serializable{
 	@EmbeddedId
 	private OrderItemPK id = new OrderItemPK();
 	
+	@Column(name = "quantity")
 	private Integer quantity;
+	
+	@Column(name = "price")
 	private Double price;
 	
-	public OrderItem() {
-	}
+	public OrderItem() {}
 
 	public OrderItem(Order order, Product product, Integer quantity, Double price) {
 		super();
@@ -85,6 +88,4 @@ public class OrderItem implements Serializable{
 		OrderItem other = (OrderItem) obj;
 		return Objects.equals(id, other.id);
 	}
-	
-	
 }

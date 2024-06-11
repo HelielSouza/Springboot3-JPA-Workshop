@@ -2,6 +2,7 @@ package com.springbackend.webservice.entities;
 
 import java.io.Serializable;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,11 +19,12 @@ public class Permission implements GrantedAuthority, Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id_permission")
 	private Long id;
 	
+	@Column(name = "description")
 	private String description;
 
-	
 	public Permission() {}
 
 	public Permission(Long id, String description) {

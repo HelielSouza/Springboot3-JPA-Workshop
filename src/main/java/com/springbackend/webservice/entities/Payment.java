@@ -6,6 +6,7 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,7 +22,10 @@ public class Payment implements Serializable{
 	
 	@Id
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
+	@Column(name = "id_payment")
 	private Long id;
+	
+	@Column(name = "moment")
 	private Instant moment;
 	
 	@JsonIgnore
@@ -29,29 +33,35 @@ public class Payment implements Serializable{
 	@MapsId
 	private Order order;
 	
-	public Payment() {
-	}
+	public Payment() {}
+	
 	public Payment(Long id, Instant moment, Order order) {
 		super();
 		this.id = id;
 		this.moment = moment;
 		this.order = order;
 	}
+	
 	public Long getId() {
 		return id;
 	}
+	
 	public void setId(Long id) {
 		this.id = id;
 	}
+	
 	public Instant getMoment() {
 		return moment;
 	}
+	
 	public void setMoment(Instant moment) {
 		this.moment = moment;
 	}
+	
 	public Order getOrder() {
 		return order;
 	}
+	
 	public void setOrder(Order order) {
 		this.order = order;
 	}
@@ -60,6 +70,7 @@ public class Payment implements Serializable{
 	public int hashCode() {
 		return Objects.hash(id);
 	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -71,6 +82,4 @@ public class Payment implements Serializable{
 		Payment other = (Payment) obj;
 		return Objects.equals(id, other.id);
 	}
-	
-	
 }
