@@ -87,6 +87,22 @@ public class User implements UserDetails, Serializable {
 		this.enabled = enabled;
 		this.permissions = permissions;
 	}
+	
+	public User(Long id, String userName, String fullName, String email, String phone, String password,
+			List<Permission> permissions) {
+		super();
+		this.id = id;
+		this.userName = userName;
+		this.fullName = fullName;
+		this.email = email;
+		this.phone = phone;
+		this.password = password;
+		this.accountNonExpired = true;
+		this.accountNonLocked = true;
+		this.credentialsNonExpired = true;
+		this.enabled = true;
+		this.permissions = permissions;
+	}
 
 	public Long getId() {
 		return id;

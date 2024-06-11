@@ -6,9 +6,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.springbackend.webservice.entities.User;
@@ -19,11 +16,13 @@ import com.springbackend.webservice.services.exceptions.ResourceNotFoundExceptio
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
-public class UserService implements UserDetailsService{
+public class UserService {
 
 	@Autowired
 	private UserRepository repository;   
 	
+	@Autowired
+	private PasswordService passwordService;
    
 	public List<User> findAll() {
 		return repository.findAll();
@@ -35,6 +34,8 @@ public class UserService implements UserDetailsService{
 	}
 	
 	public User insert(User obj) {
+		String encodedPassword = passwordService.encodePassword(obj.getPassword());
+		obj.setPassword(encodedPassword);
 		return repository.save(obj);
 	}
 	
@@ -63,15 +64,5 @@ public class UserService implements UserDetailsService{
 		entity.setFullName(obj.getFullName());
 		entity.setEmail(obj.getEmail());
 		entity.setPhone(obj.getPhone());
-	}
-	
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		var user = repository.findByUsername(username);
-		if (user != null) {
-			return user;
-		} else {
-			throw new UsernameNotFoundException("Username " + username + " not found!");
-		}
 	}
 }
