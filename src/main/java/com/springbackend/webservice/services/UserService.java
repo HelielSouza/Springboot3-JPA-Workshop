@@ -35,18 +35,32 @@ public class UserService {
 	
 	public User insert(User obj) {
 		String encodedPassword = passwordService.encodePassword(obj.getPassword());
+		
+		if (obj.getAccountNonExpired() == null) {
+            obj.setAccountNonExpired(true);
+        }
+        if (obj.getAccountNonLocked() == null) {
+            obj.setAccountNonLocked(true);
+        }
+        if (obj.getCredentialsNonExpired() == null) {
+            obj.setCredentialsNonExpired(true);
+        }
+        if (obj.getEnabled() == null) {
+            obj.setEnabled(true);
+        }
+	        
 		obj.setPassword(encodedPassword);
 		return repository.save(obj);
 	}
 	
 	public void delete(Long id) {
-		try {
-			repository.deleteById(id);	
-		} catch (EmptyResultDataAccessException e) {
-			throw new ResourceNotFoundException(id);
-		} catch (DataIntegrityViolationException e) {
-			throw new DatabaseException(e.getMessage());
-		}
+	    try {
+	        repository.deleteById(id);    
+	    } catch (EmptyResultDataAccessException e) {
+	        throw new ResourceNotFoundException(id);
+	    } catch (DataIntegrityViolationException e) {
+	        throw new DatabaseException(e.getMessage());
+	    }
 	}
 	
 	public User update(Long id, User obj) {
@@ -61,6 +75,7 @@ public class UserService {
 	}
 	
 	private void updateData(User entity, User obj) {
+		entity.setUserName(obj.getUserName());
 		entity.setFullName(obj.getFullName());
 		entity.setEmail(obj.getEmail());
 		entity.setPhone(obj.getPhone());
