@@ -9,12 +9,124 @@
 </head>
 
 <body>
-    <div class="intro">
-        <h1>Bem vindo à minha API construída com Spring boot</h1>
-        <p>Me chamo heliel e em seguida, irei te explicar os detalhes das end-points da API e hospedagem do serviço</p>
-    </div>
-    <div class="endpoint">
+    <div class="container">
+        <div class="intro">
+            <h1>Bem vindo à minha RESTful WebService construída com Spring Boot</h1>
+            <p>Me chamo Heliel Souza, sou desenvolvedor Java Backend e em seguida, irei te explicar os detalhes sobre
+                as endpoints, tecnologias e a forma como foi hospedada esta WebService.
+            </p>
+            <p>Essa é uma RESTful Webservice relacionada a vendas de uma loja on-line, no qual ela permite trabalhar com
+                diversas entidades: usuários, pedidos, pagamentos, produtos, categorias e tudo mais</p>
+        </div>
 
+
+        <div class="endpoint">
+            <h2>Endpoints públicas</h2>
+            <ul>
+                <li><strong>GET:</strong> <a
+                        href="https://webservice-spring.helielsouza.com.br/users"><code>/users</code></a> - Para
+                    retornar todos os usuários via JSON (com senha encriptada);</li>
+                <li><strong>GET:</strong> <a
+                        href="https://webservice-spring.helielsouza.com.br/users/1"><code>/users/1</code></a> - Para
+                    retornar um usuário pelo ID (pode ser qualquer ID) via JSON;</li>
+                <li><strong>GET:</strong> <a
+                        href="https://webservice-spring.helielsouza.com.br/orders"><code>/orders</code></a> - Para
+                    retornar todos os pedidos via JSON;</li>
+                <li><strong>GET:</strong> <a
+                        href="https://webservice-spring.helielsouza.com.br/orders/1"><code>/orders/1</code></a> - Para
+                    retornar um pedido pelo ID (pode ser qualquer ID) via JSON;</li>
+                <li><strong>GET:</strong> <a
+                        href="https://webservice-spring.helielsouza.com.br/products"><code>/products</code></a> - Para
+                    retornar todos os produtos via JSON;</li>
+                <li><strong>GET:</strong> <a
+                        href="https://webservice-spring.helielsouza.com.br/products/1"><code>/products/1</code></a> -
+                    Para
+                    retornar um produto pelo ID (pode ser qualquer ID) via JSON;</li>
+                <li><strong>GET:</strong> <a
+                        href="https://webservice-spring.helielsouza.com.br/categories"><code>/categories</code></a> -
+                    Para
+                    retornar todas as categorias via JSON;</li>
+                <li><strong>GET:</strong> <a
+                        href="https://webservice-spring.helielsouza.com.br/categories/1"><code>/categories/1</code></a>
+                    - Para
+                    retornar uma categoria pelo ID (pode ser qualquer ID) via JSON</li>
+                <li><strong>PUT, DELETE, POST:</strong> Todas as endpoints acima requerem autenticação para esses
+                    métodos.</li>
+            </ul>
+        </div>
+
+        <div class="authentication">
+            <h2>Autenticação</h2>
+            <div class="paragraphs">
+                <p>Para poder se autenticar, faça uma requisição <strong>POST </strong> na endpoint
+                    <code>/auth/signin</code>
+                    passando esses dados JSON:
+                </p>
+                <div class="image"> <img src="/img/signin-post.png" alt="Sign-in POST method"></div>
+
+                <p class="alert">Claro que o usuário e senha não serão disponibilizados por motivos de segurança.</p>
+
+                <p>Serão retornados os dados JSON do <strong>access_token</strong> e <strong>refresh_token</strong>.</p>
+                <div class="image"><img src="/img/access-and-refresh-tokens.png" alt="Generated tokens"></div>
+
+                <p>Esses dados devem ser devem ser passados no HEADER das requisições que possuem restrição de
+                    autenticação igual à forma abaixo:</p>
+                <div class="image"><img src="/img/header-access-token.png" alt="Header with access-token"></div>
+
+                <p>Com o cliente passando o access-token desta forma, ele poderá realizar requisições com os métodos
+                    HTTP restritos, sendo eles <strong>POST, PUT, DELETE</strong> para todas as entidades acima, além
+                    também é claro, do
+                    método GET.</p>
+                <p>O access_token tem prazo de validade, para isso, será necessário fazer uma requisição PUT para a
+                    endpoint <code>auth/refresh/username</code> sendo username o nome de usuário autenticado.</p>
+                <div class="image"><img src="/img/header-refresh-token.png" alt="Header with refresh-token"></div>
+
+                <p>Com isso, um novo access_token será gerado e poderá ser atualizado, para que as requisições para
+                    endpoints restritas continuarão sendo
+                    realizadas com sucesso.
+                </p>
+            </div>
+        </div>
+
+        <div class="techs">
+            <h2>Tecnologias no desenvolvimento</h2>
+            <ul>
+                <li><strong>Spring Boot 3: </strong>Framework utilizado para facilitar o desenvolvimento de aplicações
+                    Java, automatizando configurações e inicializações.</li>
+                <li><strong>JPA: </strong>Interface de mapeamento objeto-relacional que define padrões para persistência
+                    de dados em Java.</li>
+                <li><strong>Hibernate: </strong>Implementação da JPA que gerencia a persistência de dados em bancos de
+                    dados relacionais.</li>
+                <li><strong>Spring Security: </strong>Framework para autenticação e autorização de usuários em
+                    aplicações Java com JWT.</li>
+                <li><strong>H2 Database: </strong>Banco de dados em memória rápido e leve usado para testes e
+                    desenvolvimento.</li>
+                <li><strong>Apache Tomcat: </strong>Servidor web e contêiner de servlets para rodar aplicações Java.
+                </li>
+                <li><strong>Maven: </strong>Utilizado para o gerenciamento de dependências e automatização de build. Foi
+                    responsável também em gerar o projeto em JAR para ser enviado para o servidor.</li>
+                <li><strong>Arquitetura de Camadas do Spring: </strong>Estrutura que separa lógica de apresentação,
+                    negócios e acesso a dados, promovendo organização e manutenibilidade. As camadas: recursos
+                    (controllers), serviços (services), entidades (entities) e persistência (repository).</li>
+            </ul>
+        </div>
+
+        <div class="techs">
+            <h2>Tecnologias na implantação (deploy)</h2>
+            <ul>
+                <li><strong>Docker: </strong>Plataforma que facilita a criação, deploy e execução de aplicações em
+                    contêineres isolados.</li>
+                <li><strong>Nginx: </strong>Servidor web e proxy reverso utilizado para balanceamento de carga, cache e
+                    segurança.</li>
+                <li><strong>VPS Ubuntu: </strong>Servidor Virtual Privado em Linux escolhido para hospedagem do
+                    WebService.</li>
+                <li><strong>Certificado SSL: </strong>Protocolo de segurança que criptografa a comunicação entre cliente
+                    e servidor, gerado para garantir a proteção dos dados transmitidos. Isso garante o acesso via
+                    HTTPS.</li>
+                <li><strong>PostgreSQL: </strong> Sistema de gerenciamento de banco de dados relacional open-source,
+                    robusto e escalável.</li>
+            </ul>
+        </div>
     </div>
 </body>
 

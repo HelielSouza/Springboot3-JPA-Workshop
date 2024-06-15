@@ -42,7 +42,7 @@ public class OrderService {
 	
 	public Order findByID(Long id) {
 		Optional<Order> obj = repository.findById(id);
-		return obj.get();
+		return obj.orElseThrow(() -> new ResourceNotFoundException(id)); 
 	}
 	
 	public Order insert(CreateOrderDto dto) {

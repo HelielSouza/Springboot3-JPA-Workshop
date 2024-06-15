@@ -41,7 +41,9 @@ public class SecurityConfig {
             "/home/**",
             "/resources/**",
             "/static/**",
-            "/styles.css"
+            "/img/**",
+            "/css/**",
+            "/styles.css",
     };
 	
 	@Bean
