@@ -1,0 +1,22 @@
+version: '3'
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - SPRING_PROFILES_ACTIVE=test  
+    ports:
+      - "8080:8080"
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - /etc/letsencrypt:/etc/letsencrypt
+      - /var/www/html:/var/www/html
+      - ./static:/usr/share/nginx/html/static  
+    depends_on:
+      - api
