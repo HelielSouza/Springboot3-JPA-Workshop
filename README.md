@@ -1,10 +1,11 @@
-# Spring boot Web Service
+# Spring Boot Web Service
 
-Link: [https://webservice-spring.helielsouza.com.br/home](https://webservice-spring.helielsouza.com.br/home)
+Link Web Service: [https://webservice-spring.helielsouza.com.br/home](https://webservice-spring.helielsouza.com.br/home)
+Linkedin: [https://www.linkedin.com/feed/update/urn:li:activity:7211155610136940544/]
 
 ### (pt-br)
 ## O que é:
-Essa é uma RESTful Webservice relacionada a vendas de uma loja on-line, no qual ela permite trabalhar com diversas entidades: usuários, pedidos, pagamentos, produtos, categorias e entre outros.
+Essa é uma RESTful Web Service relacionada a vendas de uma loja on-line, no qual ela permite trabalhar com diversas entidades: usuários, pedidos, pagamentos, produtos, categorias e entre outros.
 
 ## Tecnologias utilizadas no desenvolvimento/testes:
 - **Spring boot 3**: Framework utilizado para facilitar o desenvolvimento de aplicações Java, automatizando configurações e inicializações.
@@ -20,12 +21,12 @@ Essa é uma RESTful Webservice relacionada a vendas de uma loja on-line, no qual
 - **Docker**: Plataforma que facilita a criação, deploy e execução de aplicações em contêineres isolados.
 - **Nginx**: Servidor web e proxy reverso utilizado para balanceamento de carga, cache e segurança.
 - **VPS Ubuntu**: Servidor Virtual Privado em Linux escolhido para hospedagem do WebService.
-- **Certificado SSL**: Protocolo de segurança que criptografa a comunicação entre cliente e servidor, gerado para garantir a proteção dos dados transmitidos. Isso garante o acesso via HTTPS.
-- **PostgreSQ**L: Sistema de gerenciamento de banco de dados relacional open-source, robusto e escalável.
+- **Certificado SSL**: Gerado com Certbot, é um protocolo de segurança que criptografa a comunicação entre cliente e servidor, gerado para garantir a proteção dos dados transmitidos. Isso garante o acesso via HTTPS.
+- **PostgreSQL**: Sistema de gerenciamento de banco de dados relacional open-source, robusto e escalável.
 
 ## Como funciona:
 Envie requisições HTTP para as endpoints públicas:
-- **GET**: [/users](https://webservice-spring.helielsouza.com.br/users) - Para retornar todos os usuários via JSON (com senha encriptada);
+- **GET**: [/users](https://webservice-spring.helielsouza.com.br/users) - Para retornar todos os usuários via JSON (A senha, por mais que esteja codificada, não será visível);
 - **GET**: [/users/1](https://webservice-spring.helielsouza.com.br/users/1) - Para retornar um usuário pelo ID (pode ser qualquer ID) via JSON;
 - **GET**: [/orders](https://webservice-spring.helielsouza.com.br/orders) - Para retornar todos os pedidos via JSON;
 - **GET**: [/orders/1](https://webservice-spring.helielsouza.com.br/orders/1) - Para retornar um pedido pelo ID (pode ser qualquer ID) via JSON;
@@ -36,7 +37,7 @@ Envie requisições HTTP para as endpoints públicas:
 - **POST**, **PUT**, **DELETE**: Todas as endpoints acima requerem autenticação para esses métodos.
 
 
-Para poder se autenticar, faça uma requisição **POST** na endpoint [/auth/signin](https://webservice-spring.helielsouza.com.br/auth/singin) passando dados de *username* e *password* de algum usuário ADMIN (Isso não será disponilizado):
+Para poder se autenticar, faça uma requisição **POST** na endpoint [/auth/signin](https://webservice-spring.helielsouza.com.br/auth/singin) passando dados de *username* e *password* de algum usuário com permissão de ADMIN (isso não será disponilizado por motivos de segurança):
 
 ![signin-post](https://github.com/HelielSouza/Springboot3-JPA-Workshop/assets/127799256/f2cd6c61-f502-4892-bf4c-b12214fc326f)
 
@@ -65,7 +66,7 @@ Com isso, um novo access_token será gerado e poderá ser atualizado, para que a
 
 ### (en-us)
 ## What it is:
-This is a RESTful WebService related to sales of an online store, which allows working with various entities: users, orders, payments, products, categories, and more.
+This is a RESTful Web Service related to sales of an online store, which allows working with various entities: users, orders, payments, products, categories, and more.
 
 ## Technologies used in development/testing:
 - **Spring Boot 3**: Framework used to facilitate the development of Java applications by automating configurations and initializations.
@@ -81,13 +82,13 @@ This is a RESTful WebService related to sales of an online store, which allows w
 - **Docker**: Platform that facilitates the creation, deployment, and execution of applications in isolated containers.
 - **Nginx**: Web server and reverse proxy used for load balancing, caching, and security.
 - **VPS Ubuntu**: Virtual Private Server on Linux chosen for hosting the WebService.
-- **SSL Certificate**: Security protocol that encrypts the communication between client and server, generated to ensure the protection of transmitted data. This ensures access via HTTPS.
+- **SSL Certificate**: Generated with Certbot, is a security protocol that encrypts the communication between client and server, generated to ensure the protection of transmitted data. This ensures access via HTTPS.
 - **PostgreSQL**: Open-source, robust, and scalable relational database management system.
 
 ## How it works:
 Send HTTP requests to the public endpoints:
 
-- **GET**: [/users](https://webservice-spring.helielsouza.com.br/users) - To return all users via JSON (with encrypted password);
+- **GET**: [/users](https://webservice-spring.helielsouza.com.br/users) - To return all users via JSON (The password, even though it is encoded, will not be visible);
 - **GET**: [/users/1](https://webservice-spring.helielsouza.com.br/users/1) - To return a user by ID (it can be any ID) via JSON;
 - **GET**: [/orders](https://webservice-spring.helielsouza.com.br/orders) - To return all orders via JSON;
 - **GET**: [/orders/1](https://webservice-spring.helielsouza.com.br/orders/1) - To return an order by ID (it can be any ID) via JSON;
